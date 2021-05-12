@@ -10,3 +10,4 @@ api = responder.API()
 def on_get(req, resp):
     resp.content = api.template("index.html")
 
+

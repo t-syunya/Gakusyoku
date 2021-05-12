@@ -23,6 +23,7 @@ class Admin(Base):
 
 
 
+
 class Menu(Base):
     __tablename__ = 'menus'
     id = Column(Integer, primary_key=True)
