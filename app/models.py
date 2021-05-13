@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timedelta, date
 from sqlalchemy import Integer, Column, DateTime, String, Boolean
-from db import Base
+from database import Base
 
 
 class Admin(Base):  # 管理者
