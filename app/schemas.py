@@ -1,5 +1,4 @@
 import datetime
-
 from pydantic import BaseModel
 
 
@@ -9,8 +8,8 @@ class Admin(BaseModel):  # 管理者
 
 
 class Menu(BaseModel):  # メニュー
-    name: str
+    name: str  # メニュー名
     date: datetime.date  # 日付
     value: int  # 値段
     genre: str  # ジャンル
-    flag: bool  # 売り切れフラグ, 0：売り切れ, 1：販売中
+    is_sold_out: bool  # 0：販売中, 1：売り切れ
