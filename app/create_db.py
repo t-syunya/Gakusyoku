@@ -1,0 +1,13 @@
+import datetime
+
+import database, models
+
+with open("permanent.csv", "r") as f:
+    db = database.SessionLocal()
+    for line in f.read().splitlines()[1:]:
+        name, date_, value, genre = line.split(',')
+        year, month, day = date_.split("-")
+        date_ = datetime.date(int(year), int(month), int(day))
+        db_menu = models.Menu(name, date_, value, genre, False)
+        db.add(db_menu)
+        db.commit()
