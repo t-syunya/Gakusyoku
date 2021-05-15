@@ -11,17 +11,17 @@ class Admin(Base):  # 管理者
 class Menu(Base):  # メニュー
     __tablename__ = 'menus'
     name = Column(String, primary_key=True, nullable=False)  # メニュー名
-    date = Column(Date, nullable=False)  # 日付
+    date_ = Column(Date, nullable=False)  # 日付
     value = Column(Integer, nullable=False)  # 値段
     genre = Column(String, nullable=False)  # ジャンル
     is_sold_out = Column(Boolean, nullable=False)  # 売り切れフラグ, 0：販売中, 1：売り切れ
 
-    def __init__(self, name, date_, value, genre):
+    def __init__(self, name, date_, value, genre, is_sold_out):
         self.name = name
-        self.date = date_
+        self.date_ = date_
         self.value = value
         self.genre = genre
-        self.flag = 0
+        self.is_sold_out = is_sold_out
 
     def __repr__(self):
         return f"<Menu(name='{self.name}', date='{self.date}', value='{self.value}', genre='{self.genre}', is_sold_out='{self.is_sold_out}')>"
