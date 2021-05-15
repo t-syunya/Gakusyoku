@@ -1,5 +1,5 @@
 from sqlalchemy import Integer, Column, Date, String, Boolean
-from db import Base
+from db import Base, engine
 
 
 class Admin(Base):  # 管理者
