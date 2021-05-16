@@ -26,4 +26,4 @@ class Menu(Base):  # メニュー
         self.is_sold_out = is_sold_out
 
     def __repr__(self):
-        return f"<Menu(name='{self.name}', date='{self.date}', value='{self.value}', genre='{self.genre}', is_sold_out='{self.is_sold_out}')>"
+        return f"<Menu(name='{self.name}', date='{self.date_}', value='{self.value}', genre='{self.genre}', is_sold_out='{self.is_sold_out}')>"

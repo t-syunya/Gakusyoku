@@ -1,6 +1,7 @@
 import datetime
 
-import database, models
+import database
+import models
 
 with open("permanent.csv", "r") as f:
     db = database.SessionLocal()
@@ -11,3 +12,4 @@ with open("permanent.csv", "r") as f:
         db_menu = models.Menu(name, date_, value, genre, False)
         db.add(db_menu)
         db.commit()
+    db.close()
