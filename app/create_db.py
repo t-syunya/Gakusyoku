@@ -3,8 +3,6 @@ import datetime
 import database
 import models
 
-
-
 with open("permanent.csv", "r") as f:
     db = database.SessionLocal()
     for line in f.read().splitlines()[1:]:
