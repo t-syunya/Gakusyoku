@@ -9,6 +9,10 @@ class Admin(Base):  # 管理者
     user_id = Column(String, primary_key=True, nullable=False, index=True)
     password = Column(String, nullable=False)
 
+    def __init__(self, user_id, password):
+        self.user_id = user_id
+        self.password = password
+
 
 class Menu(Base):  # メニュー
     __tablename__ = 'menus'

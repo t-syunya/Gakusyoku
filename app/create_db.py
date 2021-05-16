@@ -3,6 +3,8 @@ import datetime
 import database
 import models
 
+
+
 with open("permanent.csv", "r") as f:
     db = database.SessionLocal()
     for line in f.read().splitlines()[1:]:
@@ -12,4 +14,7 @@ with open("permanent.csv", "r") as f:
         db_menu = models.Menu(name, date_, value, genre, False)
         db.add(db_menu)
         db.commit()
+    db_admin = models.Admin(user_id="admin", password="password")
+    db.add(db_admin)
+    db.commit()
     db.close()
