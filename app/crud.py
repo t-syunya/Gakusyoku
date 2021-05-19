@@ -36,8 +36,9 @@ def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
 """
 
 
-def get_menus(db: Session, date_: datetime.date):
-    return db.query(models.Menu).filter(models.Menu.date == date_).all()
+def get_menus(db: Session, date_: datetime.date, genre: str):
+    return db.query(models.Menu).filter(models.Menu.date_ == date_).filter(models.Menu.genre == genre).order_by(
+        models.Menu.is_sold_out).all()
 
 
 def create_menu(db: Session, data: schemas.Menu):

@@ -1,41 +1,60 @@
+/*
 Vue.component("special-menus", {
     template: `
 <div class="row">
-    <div v-for="menu of menus">{{menu}}</div>
+    <div v-for="menu of menus">{{menu}}
+    aaa
+    </div>
 </div>
 `,
-    mounted: function(){
-        this.menus = ["a", "b", "c"]
+    mounted: function () {
+        axios.get('/menu/search', this.data.genre).then(response => {
+            this.menus = response.data;
+            console.log(response.data);
+        })
+        //this.menus = ["a", "b", "c"]
     },
-    data: function (){
+    data: function () {
         return {
-            is_sold_out: 0,
+            genre: "special",
+            menus: []
+        }
+    },
+    methods: {}
+});
+*/
+
+Vue.component("permanent-menus", {
+    template: `
+        <div>
+            <div v-for="menu in menus.data">
+                <div class="row">   
+                    <p>{{menu.name}}</p>
+                </div>
+            </div>
+        </div>
+`,
+    mounted: function () {
+        axios.get('/menu/search', {
+            params:{
+                genre: "permanent"
+            }
+        }).then(response => {
+            this.menus = response;
+        })
+    },
+    data: function () {
+        return {
             menus: []
         }
     },
     methods: {}
 });
 
-Vue.component("permanent-menus", {
-    template: `
-<div class="row">
-    <p></p>
-</div>`,
-    mounted: {},
-    data: function (){
-        return {
-
-        }
-    },
-    methods: {}
-});
-
-
 
 const app = new Vue({
     el: "#app",
-    delimiters:["[[", "]]"],
-    data: {
-    },
+    delimiters: ["[[", "]]"],
+    data: {},
     methods: {},
 });
