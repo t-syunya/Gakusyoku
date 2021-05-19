@@ -41,6 +41,9 @@ def get_menus(db: Session, date_: datetime.date):
 
 
 def create_menu(db: Session, data: schemas.Menu):
-    db_menu = models.Menu(data.name, data.date_, data.value, data.genre, data.is_sold_out)
-    db.add(db_menu)
-    db.commit()
+    try:
+        db_menu = models.Menu(data.name, data.date_, data.value, data.genre, data.is_sold_out)
+        db.add(db_menu)
+        db.commit()
+    except:
+        db.rollback()
