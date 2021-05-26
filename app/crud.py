@@ -21,14 +21,17 @@ def get_items(db: Session, skip: int = 0, limit: int = 100):
 """
 
 
-def create_user(db: Session, user_id: str, password: str):
+def get_admin(db: Session, user_id: str, password: str):
+    hashed_password = hashlib.sha256((user_id + password).encode()).hexdigest()
+    db_admin = db.query(models.Admin).filter(models.Admin.user_id).first()
+    if db_admin.password
 
-    hashed_password = hashlib.sha256((user_id+password).encode()).hexdigest()
+
+def create_user(db: Session, user_id: str, password: str):
+    hashed_password = hashlib.sha256((user_id + password).encode()).hexdigest()
     db_item = models.Admin(user_id, hashed_password)
     db.add(db_item)
     db.commit()
-    db.refresh(db_item)
-    return db_item
 
 
 def get_menus(db: Session, date_: datetime.date, genre: str):

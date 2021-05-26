@@ -1,13 +1,16 @@
 import datetime
-from typing import List
-from fastapi import FastAPI, Depends, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.encoders import jsonable_encoder
-from fastapi.staticfiles import StaticFiles
-from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
+
 import uvicorn
-import crud, models, schemas
+from fastapi import Depends, FastAPI
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.security import OAuth2PasswordBearer
+from fastapi.staticfiles import StaticFiles
+from sqlalchemy.orm import Session
+
+import crud
+import models
+import schemas
 from database import SessionLocal, engine
 
 models.Base.metadata.create_all(engine)
@@ -43,8 +46,8 @@ async def menu_search(genre: str, db: Session = Depends(get_db)):
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-@app.get("/login/")
-async def read_items(token: str = Depends(oauth2_scheme)):
+@app.post("/token")
+async def login(token: str = Depends(oauth2_scheme)):
     return {"token": token}
 
 
