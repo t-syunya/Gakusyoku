@@ -1,9 +1,16 @@
+// 村上担当、HTML
+// 管理者のログイン、
 Vue.component("login-form", {
     template: `
         <div>
             
         </div>
-    `
+    `,
+    mounted: function (){},
+    data: function (){},
+    methods: function () {
+
+    }
 })
 
 Vue.component("weekly-menus", {
@@ -14,7 +21,6 @@ Vue.component("weekly-menus", {
                     <div class="card mb-3" style="max-width: 540px">
                         <div class="row no-gutters">
                             <div class="card-body">
-                                <h4>Aセット</h4>
                                 <h5 class="card-title">{{menu.date}}</h5>
                                 <p class="card-text">Aセット{{menu.set_a.name}}{{menu.set_a.value}}円</p>
                                 <p class="card-text">Bセット{{menu.set_b.name}}{{menu.set_b.value}}円</p>                                
@@ -26,10 +32,13 @@ Vue.component("weekly-menus", {
         </div>
     `,
     mounted: function (){
-
+        axios.get()
     },
     data: function (){
-        
+        return {
+            set_a: [],
+            set_b: []
+        }
     }
 })
 
@@ -108,7 +117,7 @@ Vue.component("permanent-menus", {
                             </div>        
                         </div>
                         <div class="col-8 my-auto">
-                            <img class="card-img" src="/static/images/curry.jpeg" height="200px">
+                            <img class="card-img" src="/static/images/{{image}}.jpeg" height="200px">
                             <div v-if="menu.is_sold_out === 0">
                                 <a class="btn btn-primary" href="#">販売中</a>
                             </div>
@@ -132,7 +141,8 @@ Vue.component("permanent-menus", {
     },
     data: function () {
         return {
-            menus: []
+            menus: [],
+            img: null
         }
     },
     methods: {}

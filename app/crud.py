@@ -24,8 +24,10 @@ def get_items(db: Session, skip: int = 0, limit: int = 100):
 def get_admin(db: Session, user_id: str, password: str):
     hashed_password = hashlib.sha256((user_id + password).encode()).hexdigest()
     db_admin = db.query(models.Admin).filter(models.Admin.user_id).first()
-    if db_admin.password:
-        return
+    if db_admin.password == hashed_password:
+        return  # アクセストークン返す
+    else:
+        return  # エラーを出す
 
 
 def create_user(db: Session, user_id: str, password: str):
@@ -38,6 +40,10 @@ def create_user(db: Session, user_id: str, password: str):
 def get_menus(db: Session, date_: datetime.date, genre: str):
     return db.query(models.Menu).filter(models.Menu.date_ == date_).filter(models.Menu.genre == genre).order_by(
         models.Menu.is_sold_out).all()
+
+
+def get_weekly_menus(db: Session, date_: datetime.date):
+    return db.query(models.Menu).filter(models.Menu.date_ == date_).filter(models.Menu.genre != "parmanent").all()
 
 
 def create_menu(db: Session, data: schemas.Menu):

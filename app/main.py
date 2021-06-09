@@ -4,7 +4,6 @@ import uvicorn
 from fastapi import Depends, FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
@@ -43,12 +42,11 @@ async def menu_search(genre: str, db: Session = Depends(get_db)):
     return JSONResponse(content=json_compatible_item_data)
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-@app.post("/token")
-async def login(token: str = Depends(oauth2_scheme)):
-    return {"token": token}
+@app.get('/weekly/search', response_model=schemas.Menu)
+async def weekly_search(db: Session = Depends(get_db)):
+    items = []
+    for i in range(1, 6):
+        item = crud.get_weekly_menus(db, datetime.date.today(), )
 
 
 if __name__ == "__main__":
