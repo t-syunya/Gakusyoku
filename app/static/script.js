@@ -3,7 +3,19 @@
 Vue.component("login-form", {
     template: `
         <div>
-            
+            <p>管理者ID</p>
+            <input type="text" class="login_input" required minlength="4" maxlength="8" size="10">
+            <p>パスワード</p>
+            <input type="text" class="login_input" required minlength="4" maxlength="8" size="10">
+            <button class="favorite styled"
+                    type="button">
+                Sign Up
+                <!-- red -->
+            </button>
+            <button class="favorite styled"
+                    type="button">
+                Cancel
+            </button>
         </div>
     `,
     mounted: function (){},
