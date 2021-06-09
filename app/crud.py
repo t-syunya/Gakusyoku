@@ -24,7 +24,8 @@ def get_items(db: Session, skip: int = 0, limit: int = 100):
 def get_admin(db: Session, user_id: str, password: str):
     hashed_password = hashlib.sha256((user_id + password).encode()).hexdigest()
     db_admin = db.query(models.Admin).filter(models.Admin.user_id).first()
-    if db_admin.password
+    if db_admin.password:
+        return
 
 
 def create_user(db: Session, user_id: str, password: str):

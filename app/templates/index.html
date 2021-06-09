@@ -32,11 +32,22 @@
             </nav>
         </header>
         <main>
-            <h2>日替わりメニュー</h2>
-            <special-menus></special-menus>
-            <br>
-            <h2>常設メニュー</h2>
-            <permanent-menus></permanent-menus>
+            <div v-if="display===0">
+                <h2>日替わりメニュー</h2>
+                <special-menus></special-menus>
+                <br>
+                <h2>常設メニュー</h2>
+                <permanent-menus></permanent-menus>
+            </div>
+            <div v-if="display===1">
+                <h2>今週のメニュー</h2>
+                <weekly-menus></weekly-menus>
+                <br>
+                <h2>常設メニュー</h2>
+            </div>
+            <div v-if="display===2">
+                <login-form></login-form>
+            </div>
             <br><br>
         </main>
         <footer class="fixed-bottom">

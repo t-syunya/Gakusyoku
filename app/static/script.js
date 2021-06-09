@@ -1,20 +1,50 @@
+Vue.component("login-form", {
+    template: `
+        <div>
+            
+        </div>
+    `
+})
+
+Vue.component("weekly-menus", {
+    template:`
+        <div>
+            <div v-for="menu in memus">
+                <div v-if="menu.length!==0">
+                    <div class="card mb-3" style="max-width: 540px">
+                        <div class="row no-gutters">
+                            <div class="card-body">
+                                <h4>Aセット</h4>
+                                <h5 class="card-title">{{menu.date}}</h5>
+                                <p class="card-text">Aセット{{menu.set_a.name}}{{menu.set_a.value}}円</p>
+                                <p class="card-text">Bセット{{menu.set_b.name}}{{menu.set_b.value}}円</p>                                
+                            </div>       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `,
+    mounted: function (){
+
+    },
+    data: function (){
+        
+    }
+})
+
 Vue.component("special-menus", {
     template: `
         <div>
             <div v-if="set_a.length!==0">
                 <div class="card mb-3" style="max-width: 540px">
                     <div class="row no-gutters">
-                        <div class="col-md-6">
-                            <div class="card-body">
-                                <h4>Aセット</h4>
-                                <h5 class="card-title">{{set_a.name}}</h5>
-                                <p class="card-text">{{set_a.value}}円</p>
-                            </div>        
-                        </div>
-                        <div class="col-md-6 my-auto">
-                            <img class="card-img" src="/static/images/curry.jpeg">
-                            <a class="btn btn-primary" href="#">Details</a>
-                        </div>
+                        <div class="card-body">
+                            <h4>Aセット</h4>
+                            <h5 class="card-title">{{set_a.name}}</h5>
+                            <p class="card-text">{{set_a.value}}円</p>
+                        </div>       
+                        <a class="btn btn-primary" href="#">Details</a>
                     </div>
                 </div>
             </div>
@@ -33,7 +63,7 @@ Vue.component("special-menus", {
                         </div>
                         <div class="col-md-6 my-auto">
                             <img class="card-img" src="/static/images/curry.jpeg" height="200px">
-                            <a class="btn btn-primary" href="#">Details</a>
+                            <a class="btn btn-primary" onclick="">売り切れ</a>
                         </div>
                     </div>
                 </div>
@@ -58,7 +88,11 @@ Vue.component("special-menus", {
             set_b: []
         }
     },
-    methods: {}
+    methods: {
+        sold_out: function (e){
+            axios.get('sold_out', {params: {genre:e}})
+        }
+    }
 });
 
 Vue.component("permanent-menus", {
@@ -75,7 +109,12 @@ Vue.component("permanent-menus", {
                         </div>
                         <div class="col-8 my-auto">
                             <img class="card-img" src="/static/images/curry.jpeg" height="200px">
-                            <a class="btn btn-primary" href="#">Details</a>
+                            <div v-if="menu.is_sold_out === 0">
+                                <a class="btn btn-primary" href="#">販売中</a>
+                            </div>
+                            <div v-else>
+                                <a class="btn btn"
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -103,6 +142,8 @@ Vue.component("permanent-menus", {
 const app = new Vue({
     el: "#app",
     delimiters: ["[[", "]]"],
-    data: {},
+    data: {
+        display: 0 //0:販売状況、1:メニュー、2:ログイン
+    },
     methods: {},
 });
