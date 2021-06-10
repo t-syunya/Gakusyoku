@@ -46,7 +46,7 @@ async def menu_search(genre: str, db: Session = Depends(get_db)):
 async def weekly_search(db: Session = Depends(get_db)):
     items = []
     for i in range(1, 6):
-        item = crud.get_weekly_menus(db, datetime.date.today(), )
+        item = crud.get_weekly_menus(db, datetime.date.today())
 
 
 if __name__ == "__main__":

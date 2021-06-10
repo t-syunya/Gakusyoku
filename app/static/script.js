@@ -32,12 +32,14 @@ Vue.component("weekly-menus", {
         </div>
     `,
     mounted: function (){
-        axios.get()
+        axios.get("/weekly/search", {params: {}}).then(response => {
+            this.menus = response.data;
+            console.log(this.menus)
+        });
     },
     data: function (){
         return {
-            set_a: [],
-            set_b: []
+            menus: []
         }
     }
 })
