@@ -3,26 +3,15 @@
 Vue.component("login-form", {
     template: `
         <div>
-            <p>管理者ID</p>
-            <input type="text" class="login_input" required minlength="4" maxlength="8" size="10">
-            <p>パスワード</p>
-            <input type="text" class="login_input" required minlength="4" maxlength="8" size="10">
-            <button class="favorite styled"
-                    type="button">
-                Sign Up
-                <!-- red -->
-            </button>
-            <button class="favorite styled"
-                    type="button">
-                Cancel
-            </button>
+            <form action="nx.html" method="get">
+                <p>管理者ID<input type="text" name="user_id" value="" size="24"></p>
+                <p>password<input type="password" name="password" value="" size="24"></p>
+                <p><input type="submit" value="ログイン"></p>
+            </form>
         </div>
+        
+        <h1>たむらぁぁぁ！！！！！！！！！！！！！！！</h1>
     `,
-    mounted: function (){},
-    data: function (){},
-    methods: function () {
-
-    }
 })
 
 Vue.component("weekly-menus", {
