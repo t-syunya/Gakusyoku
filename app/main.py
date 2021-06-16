@@ -39,6 +39,7 @@ async def menu_search(genre: str, db: Session = Depends(get_db)):
     item = crud.get_menus(db, datetime.date.today(), genre)
     print(item)
     json_compatible_item_data = jsonable_encoder(item)
+    print(json_compatible_item_data)
     return JSONResponse(content=json_compatible_item_data)
 
 
