@@ -13,3 +13,4 @@ class Menu(BaseModel):  # メニュー
     value: int  # 値段
     genre: str  # ジャンル
     is_sold_out: bool  # 0：販売中, 1：売り切れ
+    img_name: str  # 画像の名前

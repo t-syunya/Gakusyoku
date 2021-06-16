@@ -59,34 +59,47 @@ Vue.component("weekly-menus", {
 Vue.component("special-menus", {
     template: `
         <div>
-            <div v-if="set_a.length!==0">
+            <div v-if="set_a!==null">
                 <div class="card mb-3" style="max-width: 540px">
                     <div class="row no-gutters">
-                        <div class="card-body">
-                            <h4>Aセット</h4>
-                            <h5 class="card-title">{{set_a.name}}</h5>
-                            <p class="card-text">{{set_a.value}}円</p>
-                        </div>       
-                        <a class="btn btn-primary" href="#">Details</a>
+                        <div class="col-md-6">
+                            <div class="card-body">
+                                <h4>Aセット</h4>
+                                <h5 class="card-title">{{set_a[0].name}}</h5>
+                                <p class="card-text">{{set_a[0].value}}円</p>
+                            </div>        
+                        </div>
+                        <div class="col-md-6 my-auto">
+                            <div v-if="set_a.is_sold_out!==false">
+                                <a class="btn btn-primary" onclick="">販売中</a>
+                            </div>
+                            <div v-else>
+                                <a class="btn btn-primary" onclick="">売り切れ</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div v-else>
                 <h4>本日のAセットは存在しません。</h4>
             </div>
-            <div v-if="set_b.length!==0">
+            <div v-if="set_b!==null">
                 <div class="card mb-3" style="max-width: 540px">
                     <div class="row no-gutters">
                         <div class="col-md-6">
                             <div class="card-body">
                                 <h4>Bセット</h4>
-                                <h5 class="card-title">{{set_b.name}}</h5>
-                                <p class="card-text">{{set_b.value}}円</p>
+                                <h5 class="card-title">{{set_b[0].name}}</h5>
+                                <p class="card-text">{{set_b[0].value}}円</p>
                             </div>        
                         </div>
                         <div class="col-md-6 my-auto">
-                            <img class="card-img" src="/static/images/curry.jpeg" height="200px">
-                            <a class="btn btn-primary" onclick="">売り切れ</a>
+                            <div v-if="set_a.is_sold_out!==false">
+                                <a class="btn btn-primary" onclick="">販売中</a>
+                            </div>
+                            <div v-else>
+                                <a class="btn btn-primary" onclick="">売り切れ</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -107,8 +120,8 @@ Vue.component("special-menus", {
     },
     data: function () {
         return {
-            set_a: [],
-            set_b: []
+            set_a: null,
+            set_b: null
         }
     },
     methods: {
@@ -131,12 +144,12 @@ Vue.component("permanent-menus", {
                             </div>        
                         </div>
                         <div class="col-8 my-auto">
-                            <img class="card-img" src="/static/images/{{image}}.jpeg" height="200px">
-                            <div v-if="menu.is_sold_out === 0">
-                                <a class="btn btn-primary" href="#">販売中</a>
+                            <img class="card-img" src="images/{{menu.img_name}}.jpeg" height="200px">
+                            <div v-if="menu.is_sold_out === false">
+                                <a class="btn btn-primary">販売中</a>
                             </div>
                             <div v-else>
-                                <a class="btn btn"
+                                <a class="btn btn-primary">売り切れ</a>
                             </div>
                         </div>
                     </div>
@@ -156,7 +169,6 @@ Vue.component("permanent-menus", {
     data: function () {
         return {
             menus: [],
-            img: null
         }
     },
     methods: {}
