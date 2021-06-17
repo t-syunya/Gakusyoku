@@ -43,7 +43,26 @@ def get_menus(db: Session, date_: datetime.date, genre: str):
 
 
 def get_weekly_menus(db: Session, date_: datetime.date):
-    return db.query(models.Menu).filter(models.Menu.date_ == date_).filter(models.Menu.genre != "parmanent").all()
+    data = db.query(models.Menu).filter(models.Menu.date_ >= date_,
+                                        models.Menu.date_ < (date_ + datetime.timedelta(days=7)),
+                                        models.Menu.genre != "permanent").order_by(models.Menu.date_).all()
+    result = schemas.WeeklySetMenu(weekly_menu=[])
+    for i in range(0, len(data), 2):
+        #     name: str  # メニュー名
+        #     date_: datetime.date  # 日付
+        #     value: int  # 値段
+        #     genre: str  # ジャンル
+        #     is_sold_out: bool  # 0：販売中, 1：売り切れ
+        result.weekly_menu.append(schemas.SetMenu(
+            set_a=schemas.Menu(name=data[i].name, date_=data[i].date_, value=data[i].value, genre=data[i].genre,
+                               is_sold_out=data[i].is_sold_out, img_name=data[i].img_name),
+            set_b=schemas.Menu(name=data[i + 1].name, date_=data[i + 1].date_, value=data[i + 1].value,
+                               genre=data[i + 1].genre, is_sold_out=data[i + 1].is_sold_out,
+                               img_name=data[i + 1].img_name),
+            date_=data[i].date_
+        ))
+    print(result)
+    return result
 
 
 def create_menu(db: Session, data: schemas.Menu):

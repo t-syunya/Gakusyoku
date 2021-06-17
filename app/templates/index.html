@@ -19,6 +19,7 @@
     <title>
         情報工学実験7班
     </title>
+    <link rel="icon" type="image/vnd.microsoft.icon" href="../static/images/favicon.ico">
 </head>
 <body>
 <div id="app">
@@ -32,28 +33,30 @@
             </nav>
         </header>
         <main>
-            <div v-if="display===0">
+            <br>
+            <div v-show="display===0">
                 <h2>日替わりメニュー</h2>
                 <special-menus></special-menus>
                 <br>
                 <h2>常設メニュー</h2>
                 <permanent-menus></permanent-menus>
             </div>
-            <div v-if="display===1">
+            <div v-show="display===1">
                 <h2>今週のメニュー</h2>
                 <weekly-menus></weekly-menus>
                 <br>
                 <h2>常設メニュー</h2>
+                <permanent-menus></permanent-menus>
             </div>
-            <div v-if="display===2">
+            <div v-show="display===2">
                 <login-form></login-form>
             </div>
             <br><br>
         </main>
         <footer class="fixed-bottom">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="btn btn-outline-info col-6" v-on:click="display=0">販売状況</a>
-                <a class="btn btn-outline-info col-6" v-on:click="display=1">メニュー</a>
+                <a class="btn btn-outline-info col-6" href="#" v-on:click="display=0">販売状況</a>
+                <a class="btn btn-outline-info col-6" href="#" v-on:click="display=1">メニュー</a>
             </nav>
         </footer>
     </div>

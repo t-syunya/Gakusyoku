@@ -1,4 +1,5 @@
 import datetime
+import json
 
 import uvicorn
 from fastapi import Depends, FastAPI, Form
@@ -37,24 +38,25 @@ async def index():
 @app.get('/menu/search', response_model=schemas.Menu)
 async def menu_search(genre: str, db: Session = Depends(get_db)):
     item = crud.get_menus(db, datetime.date.today(), genre)
-    print(item)
     json_compatible_item_data = jsonable_encoder(item)
     return JSONResponse(content=json_compatible_item_data)
 
 
 @app.get('/weekly/search', response_model=schemas.Menu)
 async def weekly_search(db: Session = Depends(get_db)):
-    items = []
-    for i in range(1, 6):
-        item = crud.get_weekly_menus(db, datetime.date.today())
+    item = crud.get_weekly_menus(db, datetime.date.today())
+    json_compatible_item_data = jsonable_encoder(item)
+    print(json_compatible_item_data)
+    return JSONResponse(content=json_compatible_item_data)
 
-#なんもわからん
+
+# なんもわからん
 @app.post('/login', response_model=schemas.Admin)
-async def login(username: str = Form(...), password: str = Form(...)):
-    return {
-        "username": username,
-        "password": password
-    }
+async def login(user_id: str = Form(...), password: str = Form(...)):
+    print("user:" + user_id)
+    print("password:" + password)
+    return
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
