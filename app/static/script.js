@@ -9,20 +9,20 @@ Vue.component("login-form", {
                 <p><input type="submit" value="ログイン"></p>
             </form>
         </div>
-    `,
+    `
 })
 
 Vue.component("weekly-menus", {
     template: `
         <div>
-            <div v-for="menu in menus.weekly_menu">
+            <div v-for="menu in menus">
                 <div v-if="menu.length!==0">
                     <div class="card mb-3" style="max-width: 400px">
                         <div class="row no-gutters">
                             <div class="card-body">
-                                <h5 class="card-title">{{menu.date_}}</h5>
-                                <p class="card-text">Aセット{{menu.set_a.name}}{{menu.set_a.value}}円</p>
-                                <p class="card-text">Bセット{{menu.set_b.name}}{{menu.set_b.value}}円</p>                                
+                                <h4 class="card-title">{{menu.date_}}</h4>
+                                <h5 class="card-text">Aセット{{menu.set_a.name}}{{menu.set_a.value}}円</h5>
+                                <h5 class="card-text">Bセット{{menu.set_b.name}}{{menu.set_b.value}}円</h5>                                
                             </div>       
                         </div>
                     </div>
@@ -32,7 +32,7 @@ Vue.component("weekly-menus", {
     `,
     mounted: function () {
         axios.get("/weekly/search").then(response => {
-            this.menus = response.data;
+            this.menus = response.data.weekly_menu;
         });
     },
     data: function () {
