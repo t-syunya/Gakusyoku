@@ -1,12 +1,37 @@
 // 村上担当、HTML
 // 管理者のログイン、
+
 Vue.component("login-form", {
     template: `
         <div>
-            <form action="/login" method="post">
-                <p>管理者ID<input type="text" name="user_id" value="" size="24"></p>
-                <p>password<input type="password" name="password" value="" size="24"></p>
+            <form @submit.prevent="postLogin">
+                <p>管理者ID<input type="text" name="user_id" id="user_id" size="24"></p>
+                <p>password<input type="password" name="password" id="password" size="24"></p>
                 <p><input type="submit" value="ログイン"></p>
+            </form>
+        </div>
+    `,
+    methods: {
+        postLogin: function() {
+            axios.post('/login', {
+                user_id: $("#user_id")[0].value, 
+                password: $("#password")[0].value, 
+            }).then(response => {
+                this.set_a = response.data;
+                this.$root.display = 3
+            }).catch((e) => {
+                alert('login failed')
+            })
+            return false;
+        }
+    }
+})
+
+Vue.component("admin", {
+    template: `
+        <div>
+            <form action="/admin" method="post">
+                <p>管理者画面だよ</p>
             </form>
         </div>
     `
@@ -163,7 +188,7 @@ const app = new Vue({
     el: "#app",
     delimiters: ["[[", "]]"],
     data: {
-        display: 0 //0:販売状況、1:メニュー、2:ログイン
+        display: 0 //0:販売状況、1:メニュー、2:ログイン 3:管理者画面
     },
     methods: {},
 });
