@@ -2,7 +2,7 @@ import datetime
 import json
 
 import uvicorn
-from fastapi import Depends, FastAPI, Form
+from fastapi import Depends, FastAPI, Form, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -12,6 +12,8 @@ import crud
 import models
 import schemas
 from database import SessionLocal, engine
+
+from pydantic import BaseModel
 
 models.Base.metadata.create_all(engine)
 
@@ -46,16 +48,19 @@ async def menu_search(genre: str, db: Session = Depends(get_db)):
 async def weekly_search(db: Session = Depends(get_db)):
     item = crud.get_weekly_menus(db, datetime.date.today())
     json_compatible_item_data = jsonable_encoder(item)
-    print(json_compatible_item_data)
+    # print(json_compatible_item_data)
     return JSONResponse(content=json_compatible_item_data)
 
 
 # なんもわからん
-@app.post('/login', response_model=schemas.Admin)
-async def login(user_id: str = Form(...), password: str = Form(...)):
-    print("user:" + user_id)
-    print("password:" + password)
-    return
+@app.post('/login')
+async def login(req: schemas.Admin, db:Session= Depends(get_db)):
+    print("user:" + req.user_id)
+    print("password:" + req.password)
+    # アクセストークン
+    # 一致とか
+    return get_admin(db, req.user_id, req.password)
+    return {"id": req.user_id}
 
 
 if __name__ == "__main__":
