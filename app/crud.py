@@ -25,9 +25,10 @@ def get_admin(db: Session, user_id: str, password: str):
     hashed_password = hashlib.sha256((user_id + password).encode()).hexdigest()
     db_admin = db.query(models.Admin).filter(models.Admin.user_id).first()
     if db_admin.password == hashed_password:
-        return  # アクセストークン返す
+        return True # アクセストークン返す
     else:
-        return  # エラーを出す
+        return False
+        #raise HTTPException(status_code=401)  # エラーを出す
 
 
 def create_user(db: Session, user_id: str, password: str):
