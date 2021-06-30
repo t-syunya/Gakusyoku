@@ -12,6 +12,11 @@ import models
 import schemas
 from database import SessionLocal, engine
 
+import uuid
+from http import cookies
+
+C = cookies.SimpleCookie()
+
 models.Base.metadata.create_all(engine)
 
 app = FastAPI()
@@ -75,13 +80,19 @@ async def login(req: schemas.Admin, db: Session = Depends(get_db)):
     print("user:" + req.user_id)
     print("password:" + req.password)
     # アクセストークン
-    # 一致とか
     try:
         if crud.get_admin(db, req.user_id, req.password):
-            return
+            UUID = uuid.uuid4()
+            # クッキーに token を保存する
+            #C[{req.user_id, req.password}] = UUID
+            #database <= UUID
+            #pass
+            return UUID
         else:
+            print("パスワードが違います")
             raise HTTPException(status_code=401)
     except:
+        print("ユーザが存在しません")
         raise HTTPException(status_code=401)
 
 if __name__ == "__main__":
