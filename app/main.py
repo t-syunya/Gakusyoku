@@ -77,8 +77,10 @@ async def login(req: schemas.Admin, db: Session = Depends(get_db)):
     # アクセストークン
     # 一致とか
     try:
-        crud.get_admin(db, req.user_id, req.password)
-        return 1
+        if crud.get_admin(db, req.user_id, req.password):
+            return
+        else:
+            raise HTTPException(status_code=401)
     except:
         raise HTTPException(status_code=401)
 

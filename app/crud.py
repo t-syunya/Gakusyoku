@@ -8,13 +8,21 @@ import schemas
 
 
 def get_admin(db: Session, user_id: str, password: str):
-    hashed_password = hashlib.sha256((user_id + password).encode()).hexdigest()
-    db_admin = db.query(models.Admin).filter(models.Admin.user_id).first()
-    if db_admin.password == hashed_password:
-        return True  # アクセストークン返す
-    else:
-        return False
-        # raise HTTPException(status_code=401)  # エラーを出す
+    try:
+        print(user_id + password)
+        hashed_password = hashlib.sha256((user_id + password).encode()).hexdigest()
+
+        print(hashed_password)
+        db_admin = db.query(models.Admin).filter(models.Admin.user_id == user_id).first()
+        print(db_admin)
+        if db_admin.password == hashed_password:
+            print("一致")
+            return True  # アクセストークン返す
+        else:
+            print("失敗")
+            return False
+    except:
+        raise
 
 
 def create_user(db: Session, user_id: str, password: str):

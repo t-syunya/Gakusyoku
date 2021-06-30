@@ -44,7 +44,7 @@ Vue.component("weekly-menus", {
                     <div class="card mb-3" style="max-width: 400px">
                         <div class="row no-gutters">
                             <div class="card-body">
-                                <h4 class="card-title">{{menu.date_}}</h4>
+                                <h4 class="card-title">{{menu.date_.split("-")[1]}}月{{menu.date_.split("-")[2]}}日</h4>
                                 <h5 class="card-text">Aセット{{menu.set_a.name}}{{menu.set_a.value}}円</h5>
                                 <h5 class="card-text">Bセット{{menu.set_b.name}}{{menu.set_b.value}}円</h5>                                
                             </div>       
