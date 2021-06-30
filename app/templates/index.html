@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/static/style.css">
 
     <!-- jQuery -->
-    <script src="/static/jquery-3.6.0.js"
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
             integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
     <title>
@@ -33,6 +33,44 @@
             </nav>
         </header>
         <main>
+            <!-- Change Modal -->
+            <div class="modal fade" id="changeModal" tabindex="-1" aria-labelledby="changeModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="changeModalLabel">変更確認</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            [[this.sold_out_menu]]を売り切れに変更しますか？
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
+                            <button type="button" class="btn btn-primary" v-on:click="change_sold_out()">はい</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Revert Modal -->
+            <div class="modal fade" id="revertModal" tabindex="-1" aria-labelledby="revertModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="revertModalLabel">変更確認</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            [[this.sold_out_menu]]を販売中に変更しますか？
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
+                            <button type="button" class="btn btn-primary" v-on:click="revert_sold_out()">はい</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <br>
             <div v-show="display===0">
                 <h2>日替わりメニュー</h2>

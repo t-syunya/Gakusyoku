@@ -1,8 +1,7 @@
 import datetime
-import json
 
 import uvicorn
-from fastapi import Depends, FastAPI, Form, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -12,8 +11,6 @@ import crud
 import models
 import schemas
 from database import SessionLocal, engine
-
-from pydantic import BaseModel
 
 models.Base.metadata.create_all(engine)
 
@@ -52,16 +49,38 @@ async def weekly_search(db: Session = Depends(get_db)):
     return JSONResponse(content=json_compatible_item_data)
 
 
+@app.get('/sold_out/change')
+async def sold_out_change(name: str, db: Session = Depends(get_db)):
+    try:
+        print('SoldOut:' + name)
+        crud.change_sold_out(db, name, datetime.date.today())
+        return 1
+    except:
+        raise
+
+
+@app.get('/sold_out/revert')
+async def sold_out_revert(name: str, db: Session = Depends(get_db)):
+    try:
+        print(name)
+        crud.revert_sold_out(db, name, datetime.date.today())
+        return 1
+    except:
+        raise
+
+
 # なんもわからん
 @app.post('/login')
-async def login(req: schemas.Admin, db:Session= Depends(get_db)):
+async def login(req: schemas.Admin, db: Session = Depends(get_db)):
     print("user:" + req.user_id)
     print("password:" + req.password)
     # アクセストークン
     # 一致とか
-    return get_admin(db, req.user_id, req.password)
-    return {"id": req.user_id}
-
+    try:
+        crud.get_admin(db, req.user_id, req.password)
+        return 1
+    except:
+        raise HTTPException(status_code=401)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8007)

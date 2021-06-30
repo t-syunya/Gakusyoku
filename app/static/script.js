@@ -12,13 +12,12 @@ Vue.component("login-form", {
         </div>
     `,
     methods: {
-        postLogin: function() {
+        postLogin: function () {
             axios.post('/login', {
-                user_id: $("#user_id")[0].value, 
-                password: $("#password")[0].value, 
-            }).then(response => {
-                this.set_a = response.data;
-                this.$root.display = 3
+                user_id: $("#user_id")[0].value,
+                password: $("#password")[0].value,
+            }).then(() => {
+                app.display = 3
             }).catch((e) => {
                 alert('login failed')
             })
@@ -58,34 +57,36 @@ Vue.component("weekly-menus", {
     mounted: function () {
         axios.get("/weekly/search").then(response => {
             this.menus = response.data.weekly_menu;
+
         });
     },
     data: function () {
         return {
-            menus: []
+            menus: [],
+            ymd: []
         }
     }
 })
 
 Vue.component("special-menus", {
     template: `
-        <div>
+        <div>            
             <div v-if="set_a!==null">
                 <div class="card mb-3" style="max-width: 400px">
                     <div class="row no-gutters">
-                        <div class="col-xs-4">
+                        <div class="col-6">
                             <div class="card-body">
                                 <h4>Aセット</h4>
-                                <h5 class="card-title">{{set_a[0].name}}</h5>
-                                <p class="card-text">{{set_a[0].value}}円</p>
                             </div>        
                         </div>
-                        <div class="col-xs-4">
-                            <div v-if="set_a.is_sold_out!==false">
-                                <a class="btn btn-primary" onclick="">販売中</a>
+                        <div class="col-6">
+                            <h5 class="card-title">{{set_a[0].name}}</h5>
+                            <p class="card-text">{{set_a[0].value}}円</p>
+                            <div v-if="set_a[0].is_sold_out!==true">
+                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeModal" v-on:click="set_sold_out_menu(set_a[0].name)">販売中</a>
                             </div>
                             <div v-else>
-                                <a class="btn btn-primary" onclick="">売り切れ</a>
+                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#revertModal" v-on:click="set_sold_out_menu(set_a[0].name)">売り切れ</a>
                             </div>
                         </div>
                     </div>
@@ -97,19 +98,19 @@ Vue.component("special-menus", {
             <div v-if="set_b!==null">
                 <div class="card mb-3" style="max-width: 400px">
                     <div class="row no-gutters">
-                        <div class="col-xs-6">
+                        <div class="col-6">
                             <div class="card-body">
                                 <h4>Bセット</h4>
-                                <h5 class="card-title">{{set_b[0].name}}</h5>
-                                <p class="card-text">{{set_b[0].value}}円</p>
                             </div>        
                         </div>
-                        <div class="col-xs-6 my-auto">
-                            <div v-if="set_a.is_sold_out!==false">
-                                <a class="btn btn-primary" onclick="">販売中</a>
+                        <div class="col-6 my-auto">
+                            <h5 class="card-title">{{set_b[0].name}}</h5>
+                            <p class="card-text">{{set_b[0].value}}円</p>
+                            <div v-if="set_b[0].is_sold_out!==true">
+                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeModal" v-on:click="set_sold_out_menu(set_b[0].name)">販売中</a>
                             </div>
                             <div v-else>
-                                <a class="btn btn-primary" onclick="">売り切れ</a>
+                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#revertModal" v-on:click="set_sold_out_menu(set_b[0].name)">売り切れ</a>
                             </div>
                         </div>
                     </div>
@@ -135,8 +136,9 @@ Vue.component("special-menus", {
         }
     },
     methods: {
-        sold_out: function (e) {
-            axios.get('sold_out', {params: {genre: e}})
+        set_sold_out_menu: function (menu) {
+            console.log(menu)
+            app.sold_out_menu = menu
         }
     }
 });
@@ -147,19 +149,19 @@ Vue.component("permanent-menus", {
             <div v-for="menu in menus">
                 <div class="card mb-3" style="max-width: 400px">
                     <div class="row no-gutters">
-                        <div class="col-xs-4">
+                        <div class="col-6 my-auto">
+                            <img class="card-img" v-bind:src="'../static/images/' + menu.img_name + '.jpg'">
+                        </div>
+                        <div class="col-6">
                             <div class="card-body">
                                 <h5 class="card-title">{{menu.name}}</h5>
                                 <p class="card-text">{{menu.value}}円</p>
-                            </div>        
-                        </div>
-                        <div class="col-xs-8 my-auto">
-                            <img class="card-img" v-bind:src="'../static/images/' + menu.img_name + '.jpg'" height="10%" width="10%">
-                            <div v-if="menu.is_sold_out === false">
-                                <a class="btn btn-primary">販売中</a>
-                            </div>
-                            <div v-else>
-                                <a class="btn btn-primary">売り切れ</a>
+                                <div v-if="menu.is_sold_out === false">
+                                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeModal" v-on:click="set_sold_out_menu(menu.name)">販売中</a>
+                                </div>
+                                <div v-else>
+                                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#revertModal" v-on:click="set_sold_out_menu(menu.name)">売り切れ</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -180,7 +182,13 @@ Vue.component("permanent-menus", {
         return {
             menus: [],
         }
-    }
+    },
+    methods: {
+        set_sold_out_menu: function (menu) {
+            console.log(menu)
+            app.sold_out_menu = menu
+        }
+    },
 });
 
 
@@ -188,7 +196,29 @@ const app = new Vue({
     el: "#app",
     delimiters: ["[[", "]]"],
     data: {
-        display: 0 //0:販売状況、1:メニュー、2:ログイン 3:管理者画面
+        display: 0, //0:販売状況、1:メニュー、2:ログイン
+        sold_out_menu: null
     },
-    methods: {},
+    methods: {
+        change_sold_out: function () {
+            axios.get('/sold_out/change', {params: {name: this.sold_out_menu}}).then(response => {
+                console.log(response.data);
+                if (response.data === 1) {
+                    location.reload();
+                } else {
+                    console.log("error: sold_out/change/");
+                }
+            });
+        },
+        revert_sold_out: function () {
+            axios.get('/sold_out/revert', {params: {name: this.sold_out_menu}}).then(response => {
+                console.log(response.data);
+                if (response.data === 1) {
+                    location.reload();
+                } else {
+                    console.log("error: sold_out/revert/");
+                }
+            });
+        }
+    }
 });
