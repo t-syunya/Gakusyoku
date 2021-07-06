@@ -112,9 +112,9 @@ async def login(req: schemas.Admin, db: Session = Depends(get_db)):
         if crud.get_admin(db, req.user_id, req.password):
             UUID = uuid.uuid4()
             # クッキーに token を保存する
-            #C[{req.user_id, req.password}] = UUID
-            #database <= UUID
-            #pass
+            # C[{req.user_id, req.password}] = UUID
+            # database <= UUID
+            # pass
             return UUID
         else:
             print("パスワードが違います")
