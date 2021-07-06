@@ -17,7 +17,7 @@ Vue.component("login-form", {
                 user_id: $("#user_id")[0].value,
                 password: $("#password")[0].value,
             }).then(() => {
-                app.display = 3
+                app.display = 4
             }).catch((e) => {
                 alert('login failed')
             })
@@ -36,6 +36,96 @@ Vue.component("admin", {
     `
 })
 
+Vue.component("change-menus", {
+    template: `
+        <div>
+            <form @submit.prevent="postMenus">
+                <div v-for="(menu, index) in menus">
+                    <div v-if="menu.length!==0">
+                        <div class="card mb-3" style="max-width: 400px">
+                            <div class="row no-gutters">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{menu.date.split("-")[1]}}月{{menu.date.split("-")[2]}}日</h4>
+                                    <label>Aセット：
+                                        <input type="text" v-bind:value="menu.set_a.name" class="card-text" name="set_a">
+                                    </label>
+                                    <label>Bセット：
+                                        <input type="text" v-bind:value="menu.set_b.name" class="card-text" name="set_b">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="btn btn-outline-primary ms-auto" v-on:click="addForm">追加</a>
+                <input type="submit" value="変更">
+            </form>
+        </div>
+    `,
+    mounted: function () {
+        axios.get("/menu/search/monthly").then(response => {
+            this.menus = response.data.monthly_menu;
+        });
+    },
+    data: function () {
+        return {
+            menus: [],
+        }
+    },
+    methods: {
+        addForm: function () {
+            let new_date = "---"
+            let latest_date = null
+            if (this.menus.length !== 0) {
+                latest_date = this.menus[this.menus.length - 1].date
+            }
+            axios.get("/menu/change/return_date", {params: {latest_date: latest_date}})
+                .then(response => {
+                    new_date = response.data
+                    let additionalForm = {
+                        "set_a": {
+                            "name": "",
+                            "date": new_date,
+                            "value": "380",
+                            "genre": "A",
+                            "is_sold_out": false,
+                            "img_name": null
+                        },
+                        "set_b": {
+                            "name": "",
+                            "date": new_date,
+                            "value": "320",
+                            "genre": "B",
+                            "is_sold_out": false,
+                            "img_name": null
+                        },
+                        "date": new_date,
+                    }
+                    this.menus.push(additionalForm)
+                })
+        },
+        postMenus: function () {
+            let data_set_a = $('input[name="set_a"]').map(function () {
+                return $(this).val();
+            });
+            let data_set_b = $('input[name="set_b"]').map(function () {
+                return $(this).val();
+            });
+            for (let i = 0; i < this.menus.length; i++) {
+                this.menus[i].set_a.name = data_set_a[i]
+                this.menus[i].set_b.name = data_set_b[i]
+            }
+            let data = this.menus
+
+            axios.post("/menu/change", {"menus": data})
+                .then(() => {
+                }).catch((e) => {
+                alert('change failed')
+            });
+        }
+    }
+})
+
 Vue.component("weekly-menus", {
     template: `
         <div>
@@ -44,7 +134,7 @@ Vue.component("weekly-menus", {
                     <div class="card mb-3" style="max-width: 400px">
                         <div class="row no-gutters">
                             <div class="card-body">
-                                <h4 class="card-title">{{menu.date_.split("-")[1]}}月{{menu.date_.split("-")[2]}}日</h4>
+                                <h4 class="card-title">{{menu.date.split("-")[1]}}月{{menu.date.split("-")[2]}}日</h4>
                                 <h5 class="card-text">Aセット{{menu.set_a.name}}{{menu.set_a.value}}円</h5>
                                 <h5 class="card-text">Bセット{{menu.set_b.name}}{{menu.set_b.value}}円</h5>                                
                             </div>       
@@ -55,15 +145,13 @@ Vue.component("weekly-menus", {
         </div>
     `,
     mounted: function () {
-        axios.get("/weekly/search").then(response => {
+        axios.get("/menu/search/weekly").then(response => {
             this.menus = response.data.weekly_menu;
-
         });
     },
     data: function () {
         return {
-            menus: [],
-            ymd: []
+            menus: []
         }
     }
 })
@@ -122,10 +210,10 @@ Vue.component("special-menus", {
         </div>
 `,
     mounted: function () {
-        axios.get('/menu/search', {params: {genre: "A"}}).then(response => {
+        axios.get('/menu/search/today', {params: {genre: "A"}}).then(response => {
             this.set_a = response.data;
         });
-        axios.get('/menu/search', {params: {genre: "B"}}).then(response => {
+        axios.get('/menu/search/today', {params: {genre: "B"}}).then(response => {
             this.set_b = response.data;
         })
     },
@@ -170,7 +258,7 @@ Vue.component("permanent-menus", {
         </div>
 `,
     mounted: function () {
-        axios.get('/menu/search', {
+        axios.get('/menu/search/today', {
             params: {
                 genre: "permanent"
             }

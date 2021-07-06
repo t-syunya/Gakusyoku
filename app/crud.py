@@ -32,49 +32,67 @@ def create_user(db: Session, user_id: str, password: str):
     db.commit()
 
 
-def get_menus(db: Session, date_: datetime.date, genre: str):
-    return db.query(models.Menu).filter(models.Menu.date_ == date_).filter(models.Menu.genre == genre).order_by(
+def get_today_menus(db: Session, date: datetime.date, genre: str):
+    return db.query(models.Menu).filter(models.Menu.date == date).filter(models.Menu.genre == genre).order_by(
         models.Menu.is_sold_out).all()
 
 
-def get_weekly_menus(db: Session, date_: datetime.date):
-    data = db.query(models.Menu).filter(models.Menu.date_ >= date_,
-                                        models.Menu.date_ < (date_ + datetime.timedelta(days=7)),
-                                        models.Menu.genre != "permanent").order_by(models.Menu.date_).all()
+def get_weekly_menus(db: Session, date: datetime.date):
+    data = db.query(models.Menu).filter(models.Menu.date >= date,
+                                        models.Menu.date < (date + datetime.timedelta(days=7)),
+                                        models.Menu.genre != "permanent").order_by(models.Menu.date).all()
     result = schemas.WeeklySetMenu(weekly_menu=[])
     for i in range(0, len(data), 2):
         #     name: str  # メニュー名
-        #     date_: datetime.date  # 日付
+        #     date: datetime.date  # 日付
         #     value: int  # 値段
         #     genre: str  # ジャンル
         #     is_sold_out: bool  # 0：販売中, 1：売り切れ
         result.weekly_menu.append(schemas.SetMenu(
-            set_a=schemas.Menu(name=data[i].name, date_=data[i].date_, value=data[i].value, genre=data[i].genre,
+            set_a=schemas.Menu(name=data[i].name, date=data[i].date, value=data[i].value, genre=data[i].genre,
                                is_sold_out=data[i].is_sold_out, img_name=data[i].img_name),
-            set_b=schemas.Menu(name=data[i + 1].name, date_=data[i + 1].date_, value=data[i + 1].value,
+            set_b=schemas.Menu(name=data[i + 1].name, date=data[i + 1].date, value=data[i + 1].value,
                                genre=data[i + 1].genre, is_sold_out=data[i + 1].is_sold_out,
                                img_name=data[i + 1].img_name),
-            date_=data[i].date_
+            date=data[i].date
         ))
     print(result)
     return result
 
 
-def change_sold_out(db: Session, name: str, date_: datetime.date):
-    data = db.query(models.Menu).filter(models.Menu.date_ == date_, models.Menu.name == name).first()
+def get_monthly_menus(db: Session, date: datetime.date):
+    data = db.query(models.Menu).filter(models.Menu.date >= date,
+                                        models.Menu.date < (date + datetime.timedelta(days=30)),
+                                        models.Menu.genre != "permanent").order_by(models.Menu.date).all()
+    result = schemas.MonthlySetMenu(monthly_menu=[])
+    for i in range(0, len(data), 2):
+        result.monthly_menu.append(schemas.SetMenu(
+            set_a=schemas.Menu(name=data[i].name, date=data[i].date, value=data[i].value, genre=data[i].genre,
+                               is_sold_out=data[i].is_sold_out, img_name=data[i].img_name),
+            set_b=schemas.Menu(name=data[i + 1].name, date=data[i + 1].date, value=data[i + 1].value,
+                               genre=data[i + 1].genre, is_sold_out=data[i + 1].is_sold_out,
+                               img_name=data[i + 1].img_name),
+            date=data[i].date
+        ))
+    print(result)
+    return result
+
+
+def change_sold_out(db: Session, name: str, date: datetime.date):
+    data = db.query(models.Menu).filter(models.Menu.date == date, models.Menu.name == name).first()
     data.is_sold_out = True
     db.commit()
 
 
-def revert_sold_out(db: Session, name: str, date_: datetime.date):
-    data = db.query(models.Menu).filter(models.Menu.date_ == date_, models.Menu.name == name).first()
+def revert_sold_out(db: Session, name: str, date: datetime.date):
+    data = db.query(models.Menu).filter(models.Menu.date == date, models.Menu.name == name).first()
     data.is_sold_out = False
     db.commit()
 
 
 def create_menu(db: Session, data: schemas.Menu):
     try:
-        db_menu = models.Menu(data.name, data.date_, data.value, data.genre, data.is_sold_out)
+        db_menu = models.Menu(data.name, data.date, data.value, data.genre, data.is_sold_out, data.img_name)
         db.add(db_menu)
         db.commit()
     except:

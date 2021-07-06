@@ -10,7 +10,7 @@ class Admin(BaseModel):  # 管理者
 
 class Menu(BaseModel):  # メニュー
     name: str  # メニュー名
-    date_: datetime.date  # 日付
+    date: datetime.date  # 日付
     value: int  # 値段
     genre: str  # ジャンル
     is_sold_out: bool  # 0：販売中, 1：売り切れ
@@ -20,8 +20,16 @@ class Menu(BaseModel):  # メニュー
 class SetMenu(BaseModel):
     set_a: Menu
     set_b: Menu
-    date_: datetime.date
+    date: datetime.date
 
 
 class WeeklySetMenu(BaseModel):
     weekly_menu: List[SetMenu]
+
+
+class MonthlySetMenu(BaseModel):
+    monthly_menu: List[SetMenu]
+
+
+class PostMenus(BaseModel):
+    menus: List[SetMenu]

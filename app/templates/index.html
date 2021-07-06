@@ -28,7 +28,7 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <a class="navbar-brand" v-on:click="display=0">明石高専食堂管理システム</a>
                 <div class="d-flex">
-                    <a class="btn btn-outline-primary ms-auto" v-on:click="display=2">管理者</a>
+                    <a class="btn btn-outline-primary ms-auto" v-on:click="display=4">管理者</a>
                 </div>
             </nav>
         </header>
@@ -88,6 +88,9 @@
             </div>
             <div v-show="display===3">
                 <admin></admin>
+            </div>
+            <div v-show="display===4">
+                <change-menus></change-menus>
             </div>
             <br><br>
         </main>
