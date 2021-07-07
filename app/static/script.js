@@ -119,6 +119,7 @@ Vue.component("change-menus", {
 
             axios.post("/menu/change", {"menus": data})
                 .then(() => {
+                    location.reload()
                 }).catch((e) => {
                 alert('change failed')
             });

@@ -64,7 +64,6 @@ async def monthly_search(db: Session = Depends(get_db)):
 @app.get('/sold_out/change')
 async def sold_out_change(name: str, db: Session = Depends(get_db)):
     try:
-        print('SoldOut:' + name)
         crud.change_sold_out(db, name, datetime.date.today())
         return 1
     except:
@@ -74,7 +73,6 @@ async def sold_out_change(name: str, db: Session = Depends(get_db)):
 @app.get('/sold_out/revert')
 async def sold_out_revert(name: str, db: Session = Depends(get_db)):
     try:
-        print(name)
         crud.revert_sold_out(db, name, datetime.date.today())
         return 1
     except:
@@ -95,11 +93,28 @@ async def return_date(latest_date: Optional[datetime.date]):
 async def change_menu(req: schemas.PostMenus, db: Session = Depends(get_db)):
     try:
         for menu in req.menus:
-            data = db.query(models.Menu).filter(models.Menu.date == menu.date, models.Menu.genre == menu.set_a.genre).first()
+            # 名前のないAセット、Bセットを除外
+            a_name = menu.set_a.name.strip()
+            b_name = menu.set_b.name.strip()
+            if len(a_name) == 0 or len(b_name) == 0:
+                continue
 
-            return
+            if not db.query(models.Menu).filter(models.Menu.date == menu.date, models.Menu.genre == menu.set_a.genre).first():
+                crud.create_menu(db, menu.set_a)
+            else:
+                data = db.query(models.Menu).filter(models.Menu.date == menu.date, models.Menu.genre == menu.set_a.genre).first()
+                data.name = menu.set_a.name
+                db.commit()
+            if not db.query(models.Menu).filter(models.Menu.date == menu.date, models.Menu.genre == menu.set_b.genre).first():
+                crud.create_menu(db, menu.set_b)
+            else:
+                data = db.query(models.Menu).filter(models.Menu.date == menu.date, models.Menu.genre == menu.set_b.genre).first()
+                data.name = menu.set_b.name
+                db.commit()
+        return
     except:
         db.rollback()
+        raise
 
 
 # なんもわからん
