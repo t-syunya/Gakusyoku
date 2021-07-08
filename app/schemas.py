@@ -2,13 +2,15 @@ import datetime
 from typing import List, Optional
 from pydantic import BaseModel
 
-
-class Admin(BaseModel):  # 管理者
+"""    管理者    """
+class Admin(BaseModel):
     user_id: str
     password: str
+    token: Optional[str]
 
-
-class Menu(BaseModel):  # メニュー
+        
+"""    メニュー    """
+class Menu(BaseModel):
     name: str  # メニュー名
     date: datetime.date  # 日付
     value: int  # 値段
@@ -17,19 +19,23 @@ class Menu(BaseModel):  # メニュー
     img_name: Optional[str]  # 画像の名前
 
 
+"""    1日のメニュー    """
 class SetMenu(BaseModel):
     set_a: Menu
     set_b: Menu
     date: datetime.date
 
 
+"""    1週間のメニュー    """
 class WeeklySetMenu(BaseModel):
     weekly_menu: List[SetMenu]
 
 
+"""    1月のメニュー    """
 class MonthlySetMenu(BaseModel):
     monthly_menu: List[SetMenu]
 
 
+"""    メニュー変更用    """
 class PostMenus(BaseModel):
     menus: List[SetMenu]
