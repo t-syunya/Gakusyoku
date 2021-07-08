@@ -122,7 +122,6 @@ async def login(req: schemas.Admin, db: Session = Depends(get_db)):
         if crud.get_admin(db, req.user_id, req.password):
             uuid_ = uuid.uuid4()
             crud.insert_token(db, req.user_id, uuid_)
-            #database <= {req.user_id, UUID}
             return {"UUID": uuid_}
         else:
             print("パスワードが違います")
@@ -136,8 +135,6 @@ async def login(req: schemas.Admin, db: Session = Depends(get_db)):
 async def login(user_id: Optional[str] = Cookie(None), token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
     ret = crud.get_token(db, user_id, token)
     return {"ret": ret}
-    #dbとcookieのやつ
-    #boolで(retって名前で)返して
 
 
 if __name__ == "__main__":

@@ -1,5 +1,23 @@
-// 村上担当、HTML
-// 管理者のログイン、
+Vue.component("login-button", {
+    template: `<a class="btn btn-outline-primary ms-auto" v-on:click="loginByCookie">管理者</a>`,
+    methods: {
+        loginByCookie: function () {
+            console.log("loginByCookie()")
+            axios.get('/cookie', {
+                user_id: app.getCookie('user_id'),
+                token: app.getCookie('token'),
+            }).then(response => {
+                if (response.data.ret)
+                    app.display = 3
+                else
+                    app.display = 2
+            }).catch(e => {
+                app.display = 2
+                this.alert('Invalid Tokens')
+            })
+        },
+    }
+})
 
 
 Vue.component("login-button", {
