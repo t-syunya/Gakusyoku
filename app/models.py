@@ -8,6 +8,7 @@ class Admin(Base):  # 管理者
     __tablename__ = 'administrators'
     user_id = Column(String, primary_key=True, nullable=False, index=True)
     password = Column(String, nullable=False)
+    token = Column(String, nullable=True)
 
     def __init__(self, user_id, password):
         self.user_id = user_id
