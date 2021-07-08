@@ -1,6 +1,28 @@
 // 村上担当、HTML
 // 管理者のログイン、
 
+
+Vue.component("login-button", {
+    template: `<a class="btn btn-outline-primary ms-auto" v-on:click="loginByCookie">管理者</a>`,
+    methods: {
+        loginByCookie: function () {
+            console.log("loginByCookie()")
+            axios.get('/cookie', {
+                user_id: app.getCookie('user_id'),
+                token: app.getCookie('token'),
+            }).then(response => {
+                if (response.data.ret)
+                    app.display = 3
+                else
+                    app.display = 2
+            }).catch(e => {
+                app.display = 2
+                this.alert('Invalid Tokens')
+            })
+        },
+    }
+})
+
 Vue.component("login-form", {
     template: `
         <div>
@@ -13,27 +35,22 @@ Vue.component("login-form", {
     `,
     methods: {
         postLogin: function () {
+            console.log("postLogin()")
             axios.post('/login', {
                 user_id: $("#user_id")[0].value,
                 password: $("#password")[0].value,
-            }).then(() => {
-                app.display = 4
+            }).then(response => {
+                console.log(response.data.UUID)
+                document.cookie = "token=" + response.data.UUID
+                document.cookie = "user_id=" + $("#user_id")[0].value
+                app.display = 3
             }).catch((e) => {
+                console.log(e)
                 alert('login failed')
             })
             return false;
-        }
+        },
     }
-})
-
-Vue.component("admin", {
-    template: `
-        <div>
-            <form action="/admin" method="post">
-                <p>管理者画面だよ</p>
-            </form>
-        </div>
-    `
 })
 
 Vue.component("change-menus", {
@@ -137,8 +154,8 @@ Vue.component("weekly-menus", {
                             <div class="card-body">
                                 <h4 class="card-title">{{menu.date.split("-")[1]}}月{{menu.date.split("-")[2]}}日</h4>
                                 <h5 class="card-text">Aセット{{menu.set_a.name}}{{menu.set_a.value}}円</h5>
-                                <h5 class="card-text">Bセット{{menu.set_b.name}}{{menu.set_b.value}}円</h5>                                
-                            </div>       
+                                <h5 class="card-text">Bセット{{menu.set_b.name}}{{menu.set_b.value}}円</h5>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -159,14 +176,14 @@ Vue.component("weekly-menus", {
 
 Vue.component("special-menus", {
     template: `
-        <div>            
+        <div>
             <div v-if="set_a!==null">
                 <div class="card mb-3" style="max-width: 400px">
                     <div class="row no-gutters">
                         <div class="col-6">
                             <div class="card-body">
                                 <h4>Aセット</h4>
-                            </div>        
+                            </div>
                         </div>
                         <div class="col-6">
                             <h5 class="card-title">{{set_a[0].name}}</h5>
@@ -190,7 +207,7 @@ Vue.component("special-menus", {
                         <div class="col-6">
                             <div class="card-body">
                                 <h4>Bセット</h4>
-                            </div>        
+                            </div>
                         </div>
                         <div class="col-6 my-auto">
                             <h5 class="card-title">{{set_b[0].name}}</h5>
@@ -285,10 +302,16 @@ const app = new Vue({
     el: "#app",
     delimiters: ["[[", "]]"],
     data: {
-        display: 0, //0:販売状況、1:メニュー、2:ログイン
+        display: 0, //0:販売状況、1:メニュー、2:ログイン、3:メニュー変更
         sold_out_menu: null
     },
     methods: {
+        getCookie: function (name) {
+            let matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        },
         change_sold_out: function () {
             axios.get('/sold_out/change', {params: {name: this.sold_out_menu}}).then(response => {
                 console.log(response.data);

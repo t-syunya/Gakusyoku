@@ -6,6 +6,7 @@ from pydantic import BaseModel
 class Admin(BaseModel):  # 管理者
     user_id: str
     password: str
+    token: Optional[str]
 
 
 class Menu(BaseModel):  # メニュー

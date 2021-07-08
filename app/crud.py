@@ -9,7 +9,6 @@ import schemas
 
 def get_admin(db: Session, user_id: str, password: str):
     try:
-        print(user_id + password)
         hashed_password = hashlib.sha256((user_id + password).encode()).hexdigest()
 
         print(hashed_password)
@@ -17,7 +16,7 @@ def get_admin(db: Session, user_id: str, password: str):
         print(db_admin)
         if db_admin.password == hashed_password:
             print("一致")
-            return True  # アクセストークン返す
+            return True
         else:
             print("失敗")
             return False
@@ -25,10 +24,31 @@ def get_admin(db: Session, user_id: str, password: str):
         raise
 
 
-def create_user(db: Session, user_id: str, password: str):
-    hashed_password = hashlib.sha256((user_id + password).encode()).hexdigest()
-    db_item = models.Admin(user_id, hashed_password)
-    db.add(db_item)
+def create_admin(db: Session, user_id: str, password: str):
+    try:
+        hashed_password = hashlib.sha256((user_id + password).encode()).hexdigest()
+        data = models.Admin(user_id, hashed_password)
+        db.add(data)
+        db.commit()
+    except:
+        raise
+
+
+def get_token(db: Session, user_id: str, token: str):
+    try:
+        data = db.querydata = db.query(models.Admin).filter(models.Admin.user_id == user_id).first()
+        if data.token == token:
+            return True
+        else:
+            return False
+    except:
+        return False
+
+
+
+def insert_token(db: Session, user_id: str, token: str):
+    data = db.query(models.Admin).filter(models.Admin.user_id == user_id).first()
+    data.token = token
     db.commit()
 
 
@@ -56,7 +76,6 @@ def get_weekly_menus(db: Session, date: datetime.date):
                                img_name=data[i + 1].img_name),
             date=data[i].date
         ))
-    print(result)
     return result
 
 
@@ -74,7 +93,6 @@ def get_monthly_menus(db: Session, date: datetime.date):
                                img_name=data[i + 1].img_name),
             date=data[i].date
         ))
-    print(result)
     return result
 
 
