@@ -1,7 +1,7 @@
 import datetime
 
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Cookie
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,9 +14,6 @@ import schemas
 from database import SessionLocal, engine
 
 import uuid
-from http import cookies
-
-C = cookies.SimpleCookie()
 
 models.Base.metadata.create_all(engine)
 
@@ -121,12 +118,11 @@ async def change_menu(req: schemas.PostMenus, db: Session = Depends(get_db)):
 async def login(req: schemas.Admin, db: Session = Depends(get_db)):
     print("user:" + req.user_id)
     print("password:" + req.password)
-    # アクセストークン
     try:
         if crud.get_admin(db, req.user_id, req.password):
-            UID = uuid.uuid4()
-            #database <= {req.user_id, UUID}
-            return UID
+            uuid_ = uuid.uuid4()
+            crud.insert_token(db, req.user_id, uuid_)
+            return {"UUID": uuid_}
         else:
             print("パスワードが違います")
             raise HTTPException(status_code=401)
@@ -135,15 +131,11 @@ async def login(req: schemas.Admin, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401)
 
 
-@app.post('/cookie')
-async def login(): #cookieからのID
-    #dbとcookieのやつ
-    #boolで(retって名前で)返して
-'''
-@app.post("/cookie-and-object/")
-def create_cookie(response: Response):
-    response.set_cookie(key="fakesession", value="fake-cookie-session-value")
-    return {"message": "Come to the dark side, we have cookies"}
-'''
+@app.get('/cookie')
+async def login(user_id: Optional[str] = Cookie(None), token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
+    ret = crud.get_token(db, user_id, token)
+    return {"ret": ret}
+
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8087)
+    uvicorn.run("main:app", host="0.0.0.0", port=8087, workers=2, ssl_keyfile='./server.key', ssl_certfile='./server.crt')
