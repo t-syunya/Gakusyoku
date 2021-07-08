@@ -19,28 +19,6 @@ Vue.component("login-button", {
     }
 })
 
-
-Vue.component("login-button", {
-    template: `<a class="btn btn-outline-primary ms-auto" v-on:click="loginByCookie">管理者</a>`,
-    methods: {
-        loginByCookie: function () {
-            console.log("loginByCookie()")
-            axios.get('/cookie', {
-                user_id: app.getCookie('user_id'),
-                token: app.getCookie('token'),
-            }).then(response => {
-                if (response.data.ret)
-                    app.display = 3
-                else
-                    app.display = 2
-            }).catch(e => {
-                app.display = 2
-                this.alert('Invalid Tokens')
-            })
-        },
-    }
-})
-
 Vue.component("login-form", {
     template: `
         <div>
@@ -330,7 +308,7 @@ const app = new Vue({
             ));
             return matches ? decodeURIComponent(matches[1]) : undefined;
         },
-        change_sold_out: function () {
+        changeSoldOut: function () {
             axios.get('/sold_out/change', {params: {name: this.sold_out_menu}}).then(response => {
                 console.log(response.data);
                 if (response.data === 1) {
@@ -340,7 +318,7 @@ const app = new Vue({
                 }
             });
         },
-        revert_sold_out: function () {
+        revertSoldOut: function () {
             axios.get('/sold_out/revert', {params: {name: this.sold_out_menu}}).then(response => {
                 console.log(response.data);
                 if (response.data === 1) {

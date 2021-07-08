@@ -29,7 +29,6 @@
                 <a class="navbar-brand" v-on:click="display=0">明石高専食堂管理システム</a>
                 <div class="d-flex">
 			        <login-button></login-button>
-                    <!-- <a class="btn btn-outline-primary ms-auto" v-on:click="display=2">管理者</a> -->
                 </div>
             </nav>
         </header>
@@ -48,7 +47,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
-                            <button type="button" class="btn btn-primary" v-on:click="change_sold_out()">はい</button>
+                            <button type="button" class="btn btn-primary" v-on:click="changeSoldOut()">はい</button>
                         </div>
                     </div>
                 </div>
@@ -67,7 +66,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
-                            <button type="button" class="btn btn-primary" v-on:click="revert_sold_out()">はい</button>
+                            <button type="button" class="btn btn-primary" v-on:click="revertSoldOut()">はい</button>
                         </div>
                     </div>
                 </div>
