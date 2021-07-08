@@ -1,9 +1,6 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import relation, scoped_session, sessionmaker
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-
-# filename = "gakusyoku.db"
-# url = "sqlite:///" + filename
 
 url = "postgresql+psycopg2://team7:nanahann@localhost/team7db"
 

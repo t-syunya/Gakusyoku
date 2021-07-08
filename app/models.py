@@ -4,7 +4,8 @@ from sqlalchemy import Integer, Column, Date, String, Boolean
 from database import Base
 
 
-class Admin(Base):  # 管理者
+class Admin(Base):
+    """ 管理者 """
     __tablename__ = 'administrators'
     user_id = Column(String, primary_key=True, nullable=False, index=True)
     password = Column(String, nullable=False)
@@ -15,7 +16,8 @@ class Admin(Base):  # 管理者
         self.password = password
 
 
-class Menu(Base):  # メニュー
+class Menu(Base):
+    """ メニュー """
     __tablename__ = 'menus'
     name = Column(String, primary_key=True, nullable=False)  # メニュー名
     date = Column(Date, primary_key=True, nullable=False)  # 日付

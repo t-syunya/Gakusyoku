@@ -45,7 +45,6 @@ def get_token(db: Session, user_id: str, token: str):
         return False
 
 
-
 def insert_token(db: Session, user_id: str, token: str):
     data = db.query(models.Admin).filter(models.Admin.user_id == user_id).first()
     data.token = token
@@ -63,11 +62,6 @@ def get_weekly_menus(db: Session, date: datetime.date):
                                         models.Menu.genre != "permanent").order_by(models.Menu.date).all()
     result = schemas.WeeklySetMenu(weekly_menu=[])
     for i in range(0, len(data), 2):
-        #     name: str  # メニュー名
-        #     date: datetime.date  # 日付
-        #     value: int  # 値段
-        #     genre: str  # ジャンル
-        #     is_sold_out: bool  # 0：販売中, 1：売り切れ
         result.weekly_menu.append(schemas.SetMenu(
             set_a=schemas.Menu(name=data[i].name, date=data[i].date, value=data[i].value, genre=data[i].genre,
                                is_sold_out=data[i].is_sold_out, img_name=data[i].img_name),

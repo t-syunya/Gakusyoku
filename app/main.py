@@ -1,4 +1,5 @@
 import datetime
+import uuid
 
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Cookie
@@ -13,7 +14,6 @@ import models
 import schemas
 from database import SessionLocal, engine
 
-import uuid
 
 models.Base.metadata.create_all(engine)
 
